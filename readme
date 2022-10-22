@@ -1,0 +1,18 @@
+1- Les règles que j'ai respecté pour écrire ce code (Voire la photo dans le même dossier International_Morse_Code.svg.png)
+
+2- Pour que ce code puise travailler chez vous il faut installer les packages ci-dessous
+    a- Python (pour vérifier si vous le possédez chez vous entre au terminal et tape python3 --version)
+    b- python get-pip.py
+    c- pip install playsound
+    d- pip install pyttsx3 (il se peut que vous trouvez un probleme dans ce package si c'est le cas vous chercher sur google l'erreur vous allez trouver un autre package desinstaller le premier et installer le package que vous avez trouvez sinon vous pouver me contacter)
+    c- vsCode ou un autre IDE
+
+3- Ce dossier contient deux fichiers de code Python
+    
+    a- Le premier fichier "CodeMorse.py"
+        Ce fichier convert que ça soit d'un text compréhensible vers code morse ou le contraire et après il lit le résultat en audio
+
+    b- Le deuxième fichier "GiToMorseCOde.py"
+        Concernant ce fichier il convert la liste des étudiants GI (le fichier "ListLstGi.txr") en code morse ("FullNameInMorseCode.txt") et le contraire de code morse ("OnlyNameMorse.txt") vers leurs noms ("fromMorseToText.txt")
+
+4- Pour exécuter l'un des fichiers vous entrer vers vous terminal entrer vers l'emplacement du dossier python Morse Code et vous taper python3 nomFichier.py
