@@ -4,7 +4,7 @@
     a- Python (pour vérifier si vous le possédez chez vous entre au terminal et tape python3 --version)
     b- python get-pip.py
     c- pip install playsound
-    d- pip install pyttsx3 (il se peut que vous trouvez un probleme dans ce package si c'est le cas vous chercher sur google l'erreur vous allez trouver un autre package desinstaller le premier et installer le package que vous avez trouvez sinon vous pouver me contacter)
+    d- pip install pyttsx3 (il se peut que vous trouvez un probleme dans ce package si c'est le cas, vous cherchez sur google l'erreur, vous allez trouver un autre package, desinstaller le premier et installer le package que vous avez trouvez, sinon vous pouver me contacter)
     c- vsCode ou un autre IDE
 
 3- Ce dossier contient deux fichiers de code Python
