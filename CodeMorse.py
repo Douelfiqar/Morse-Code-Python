@@ -1,78 +1,86 @@
-from playsound import playsound
-import pyttsx3
+import os
+
+from morse_utils import morse_to_text, normalize, path, text_to_morse, text_to_standard_morse
+
+# Sound and speech are optional: the converter still works if they are missing or broken.
+try:
+    from playsound import playsound
+except ImportError:
+    playsound = None
+
+try:
+    import pyttsx3
+except ImportError:
+    pyttsx3 = None
 
 
-engine = pyttsx3.init()
-rate = engine.getProperty("rate")
-engine.setProperty("rate",100)
+def make_engine():
+    if pyttsx3 is None:
+        return None
+    try:
+        engine = pyttsx3.init()
+    except Exception as error:
+        print(f"(text-to-speech unavailable: {error})")
+        return None
+    engine.setProperty("rate", 100)
+    engine.setProperty("volume", 1.0)
+    voices = engine.getProperty("voices")
+    if len(voices) > 1:
+        engine.setProperty("voice", voices[1].id)
+    return engine
 
-volume = engine.getProperty('volume')   #getting to know current volume level (min=0 and max=1)
-print (volume)                          #printing current volume level
-engine.setProperty('volume',1.0)
 
-voices = engine.getProperty('voices') 
-engine.setProperty('voice', voices[1].id)
+def play_letters(text):
+    """Play soundeLetters/<letter>.wav for each letter that has a sound file."""
+    if playsound is None:
+        return
+    for char in normalize(text):
+        wav = path(os.path.join("soundeLetters", char + ".wav"))
+        if not os.path.exists(wav):
+            continue
+        try:
+            playsound(wav)
+        except Exception as error:
+            print(f"(could not play sound: {error})")
+            return
 
-def fromTextToMorse(name,StringInMorse):
-    
-    #read the file
-    fileMorseCode = open("morseCode.txt","r").readlines()
-    name = name.upper()
 
-    for lettre in name:
-        playsound(r'soundeLetters/'+lettre+'.wav')
-        for line in fileMorseCode:
-            if line[0] == lettre:
-                line = line[2 : -1 : ] 
-                StringInMorse += line
-                StringInMorse += "   "
+def fromTextToMorse(text):
+    morse, unknown = text_to_morse(text)
+    play_letters(text)
+    print(morse)
+    print("Standard notation:", text_to_standard_morse(text))
+    if unknown:
+        print("Skipped (no Morse code):", " ".join(sorted(set(unknown))))
+    return morse
 
-    StringInMorse += "/       "
-    return StringInMorse
+
+def fromMorseToText(morse):
+    text, unknown = morse_to_text(morse)
+    print(text)
+    if unknown:
+        print("Unknown Morse code (shown as ?):", " | ".join(unknown))
+    engine = make_engine()
+    if engine and text:
+        engine.say(text)
+        engine.runAndWait()
+    return text
+
 
 def menu():
-    print("1- Text -> Corse code")
+    print("1- Text -> Morse code")
     print("2- Morse code -> Text")
-    choise = input()
+    choice = input().strip()
 
-    if choise=='1':
+    if choice == "1":
         print("What's your name ?")
-        Name = input()
-        listOfNameSplited = Name.split()
-        StringInMorse = ""
-
-        for nameSplited in listOfNameSplited:
-            StringInMorse = fromTextToMorse(nameSplited,StringInMorse)
-
-        print(StringInMorse)
-
-    elif choise=='2':
-        print("What's your name ?")
-        name = input()
-        fromMorseToText(name)
+        fromTextToMorse(input())
+    elif choice == "2":
+        print("Enter the Morse code, for example '... --- ...' or '. . .   --- --- ---   . . .'")
+        fromMorseToText(input())
     else:
-        print("404")
-
-def fromMorseToText(name):
-    fileMorseCode = open("morseCode.txt","r").readlines()
-    myName = ""
-    ALLNameSplited = name.split("       ")
-
-    for NameParts in ALLNameSplited:
-        letters = NameParts.split("   ")
-        for letter in letters:
-            for line in fileMorseCode:
-                if letter == line[2 : -1 : ]:
-
-                    myName += line[0:1:]
-        myName += "  "
-        
-    print(myName)
-    engine.say(myName)
-    engine.runAndWait()
+        print("Invalid choice, type 1 or 2.")
 
 
-#Main
-
-
-choise = menu()
+if __name__ == "__main__":
+    menu()
